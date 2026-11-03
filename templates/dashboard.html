@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — KnowBridge AI{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold text-dark mb-1">Intelligent Handover Dashboard</h3>
+    <p class="text-muted small mb-0">Live project continuity status, document extraction metrics, and pending transitions</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/documents" class="btn-kb-outline">
+      <i data-lucide="upload-cloud"></i> Upload Document
+    </a>
+    <a href="/reports" class="btn-kb-primary">
+      <i data-lucide="file-check"></i> Generate Report
+    </a>
+  </div>
+</div>
+
+<!-- 6 Dashboard Metric Summary Cards -->
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-icon-box blue">
+      <i data-lucide="folder-kanban"></i>
+    </div>
+    <div class="metric-data">
+      <div class="metric-val" id="metricProjects">0</div>
+      <div class="metric-label">Total Projects</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-icon-box teal">
+      <i data-lucide="file-text"></i>
+    </div>
+    <div class="metric-data">
+      <div class="metric-val" id="metricDocs">0</div>
+      <div class="metric-label">Documents Analysed</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-icon-box amber">
+      <i data-lucide="clock"></i>
+    </div>
+    <div class="metric-data">
+      <div class="metric-val" id="metricPendingTasks">0</div>
+      <div class="metric-label">Pending Tasks</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-icon-box green">
+      <i data-lucide="check-circle-2"></i>
+    </div>
+    <div class="metric-data">
+      <div class="metric-val" id="metricCompletedTasks">0</div>
+      <div class="metric-label">Completed Tasks</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-icon-box blue">
+      <i data-lucide="file-check-2"></i>
+    </div>
+    <div class="metric-data">
+      <div class="metric-val" id="metricReports">0</div>
+      <div class="metric-label">Handover Reports</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-icon-box red">
+      <i data-lucide="shield-alert"></i>
+    </div>
+    <div class="metric-data">
+      <div class="metric-val" id="metricApprovals">0</div>
+      <div class="metric-label">Pending Approvals</div>
+    </div>
+  </div>
+</div>
+
+<!-- Split Dashboard Layout: Left vs Right -->
+<div class="dashboard-grid">
+  <!-- LEFT COLUMN -->
+  <div class="dashboard-col">
+    <!-- Project Progress Summary -->
+    <div class="dashboard-card" id="overview">
+      <div class="dashboard-card-header">
+        <h3><i data-lucide="layers" class="text-primary"></i> Active Project Handover Progress</h3>
+        <a href="/projects" class="text-primary small fw-semibold">View All Projects →</a>
+      </div>
+      <div class="dashboard-card-body" id="projectProgressContainer">
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary spinner-border-sm" role="status"></div>
+          <span class="ms-2 text-muted small">Loading projects...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Chart: Tasks Status -->
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">
+        <h3><i data-lucide="pie-chart" class="text-primary"></i> Deliverable Status Breakdown</h3>
+        <span class="badge bg-light text-secondary border">Real-Time</span>
+      </div>
+      <div class="dashboard-card-body">
+        <div style="height: 220px; position: relative;">
+          <canvas id="taskStatusChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activities Timeline -->
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">
+        <h3><i data-lucide="activity" class="text-primary"></i> Recent Transition Activity</h3>
+        <a href="/timeline" class="text-primary small fw-semibold">Full Timeline →</a>
+      </div>
+      <div class="dashboard-card-body" id="recentActivitiesContainer">
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary spinner-border-sm" role="status"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="dashboard-col">
+    <!-- Latest Handover Report Card -->
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">
+        <h3><i data-lucide="award" class="text-primary"></i> Latest Handover Report</h3>
+        <a href="/reports" class="text-primary small fw-semibold">All Reports →</a>
+      </div>
+      <div class="dashboard-card-body" id="latestReportContainer">
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary spinner-border-sm" role="status"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Tasks Requiring Attention -->
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">
+        <h3><i data-lucide="alert-circle" class="text-warning"></i> Critical Pending Deliverables</h3>
+        <a href="/tasks" class="text-primary small fw-semibold">Manage Tasks →</a>
+      </div>
+      <div class="dashboard-card-body" id="dashboardPendingTasksContainer">
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary spinner-border-sm" role="status"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Document Ingestion & Analysis Chart -->
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">
+        <h3><i data-lucide="bar-chart-3" class="text-primary"></i> Document Processing Status</h3>
+        <a href="/documents" class="text-primary small fw-semibold">Manage Docs →</a>
+      </div>
+      <div class="dashboard-card-body">
+        <div style="height: 200px; position: relative;">
+          <canvas id="docStatusChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

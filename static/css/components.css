@@ -1,0 +1,211 @@
+/* Drag and Drop Upload Area */
+.upload-dropzone {
+  border: 2px dashed #B8D5FA;
+  background-color: #F8FBFE;
+  border-radius: var(--border-radius-md);
+  padding: 36px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload-dropzone:hover, .upload-dropzone.dragover {
+  border-color: var(--primary-blue);
+  background-color: #EDF5FC;
+}
+
+.dropzone-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: var(--secondary-blue);
+  color: var(--primary-blue);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+/* Evidence Modal Styling */
+.evidence-highlight-box {
+  background-color: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-left: 4px solid #F59E0B;
+  padding: 16px;
+  border-radius: var(--border-radius-sm);
+  margin: 12px 0;
+  font-family: 'SF Pro Text', Georgia, serif;
+  font-size: 0.95rem;
+  color: #78350F;
+  line-height: 1.6;
+}
+
+.evidence-meta-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Timeline Components */
+.timeline-track {
+  position: relative;
+  padding-left: 28px;
+}
+
+.timeline-track::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 9px;
+  width: 2px;
+  background-color: var(--border-color);
+}
+
+.timeline-node {
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -28px;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  border: 3px solid var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(36, 117, 232, 0.15);
+}
+
+.timeline-node.success .timeline-dot {
+  border-color: var(--success-green);
+  box-shadow: 0 0 0 3px rgba(37, 166, 106, 0.15);
+}
+
+.timeline-node.warning .timeline-dot {
+  border-color: var(--warning-amber);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+
+.timeline-content {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.timeline-time {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.timeline-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Data Tables */
+.table-kb {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-kb th {
+  background-color: #F8FBFE;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table-kb td {
+  padding: 14px 16px;
+  font-size: 0.88rem;
+  color: var(--text-main);
+  border-bottom: 1px solid #EDF2F7;
+  vertical-align: middle;
+}
+
+.table-kb tr:hover td {
+  background-color: #FAFCFF;
+}
+
+/* Empty States */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--secondary-blue);
+  color: var(--primary-blue);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.empty-state h4 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.empty-state p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  max-width: 380px;
+  margin: 0 auto 18px;
+}
+
+/* Risk Card */
+.risk-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  background-color: #FFFFFF;
+  transition: all 0.2s;
+}
+
+.risk-card.high { border-left: 4px solid var(--danger-red); }
+.risk-card.medium { border-left: 4px solid var(--warning-amber); }
+.risk-card.low { border-left: 4px solid var(--teal-accent); }
+
+/* Handover Report Document View */
+.report-paper {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  border-radius: 4px;
+  padding: 40px 48px;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.report-section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 6px;
+  margin: 22px 0 12px;
+}

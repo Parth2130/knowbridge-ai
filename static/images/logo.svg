@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60">
+  <defs>
+    <linearGradient id="kbGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2475E8"/>
+      <stop offset="100%" stop-color="#20A99A"/>
+    </linearGradient>
+  </defs>
+  <!-- Bridge Icon -->
+  <g transform="translate(10, 8)">
+    <circle cx="22" cy="22" r="21" fill="#EDF5FC" stroke="#DFE9F2" stroke-width="1.5"/>
+    <path d="M12 28 C16 16, 28 16, 32 28" fill="none" stroke="#2475E8" stroke-width="3" stroke-linecap="round"/>
+    <path d="M10 29 L34 29" stroke="#20A99A" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="22" cy="14" r="3" fill="#2475E8"/>
+    <line x1="16" y1="22" x2="16" y2="28" stroke="#2475E8" stroke-width="1.5"/>
+    <line x1="28" y1="22" x2="28" y2="28" stroke="#2475E8" stroke-width="1.5"/>
+  </g>
+  <!-- Brand Text -->
+  <text x="62" y="32" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="20" font-weight="800" fill="#243449" letter-spacing="-0.3">
+    KNOW<tspan fill="#2475E8">BRIDGE</tspan>
+  </text>
+  <rect x="180" y="18" width="26" height="15" rx="3.5" fill="#DCEBFA"/>
+  <text x="185" y="29" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="700" fill="#2475E8">AI</text>
+  <text x="63" y="44" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="500" fill="#718096" letter-spacing="0.2">
+    HANDOVER PLATFORM
+  </text>
+</svg>

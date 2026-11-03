@@ -1,0 +1,25 @@
+# Python & Virtual Environment
+venv/
+env/
+ENV/
+*.pyc
+__pycache__/
+.pytest_cache/
+
+# SQLite Database & Instance
+instance/*.db
+*.sqlite3
+instance/knowbridge.db
+
+# Environment & Secrets
+.env
+.env.local
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Uploads directory (keep directory, ignore uploaded dynamic files)
+uploads/*
+!uploads/.gitkeep

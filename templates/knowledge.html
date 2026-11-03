@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Knowledge Base — KnowBridge AI{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <div>
+    <h3 class="fw-bold text-dark mb-1">Project Knowledge Base</h3>
+    <p class="text-muted small mb-0">Searchable repository of architectural decisions, technical procedures, and verified documentation</p>
+  </div>
+  <div class="input-group" style="max-width:320px;">
+    <span class="input-group-text bg-white border-end-0"><i data-lucide="search" style="width:16px;color:#718096;"></i></span>
+    <input type="text" id="kbSearchInput" class="form-control border-start-0" placeholder="Filter knowledge points...">
+  </div>
+</div>
+
+<div class="row" id="knowledgeCardsContainer">
+  <div class="col-12 text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="text-muted mt-2">Loading knowledge repository...</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/knowledge.js') }}"></script>
+{% endblock %}

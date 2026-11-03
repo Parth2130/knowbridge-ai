@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}AI Knowledge Extraction — KnowBridge AI{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <div>
+    <h3 class="fw-bold text-dark mb-1">AI Knowledge Extraction Dashboard</h3>
+    <p class="text-muted small mb-0">Automated NLP parsing of deliverables, architectural decisions, risks, and critical blockers</p>
+  </div>
+  <a href="/reports" class="btn-kb-outline">
+    <i data-lucide="file-check-2"></i> Handover Reports
+  </a>
+</div>
+
+<!-- Controls: Project & Document Selector -->
+<div class="card p-3 mb-4 border bg-white shadow-sm">
+  <div class="row g-3 align-items-end">
+    <div class="col-md-4">
+      <label class="form-label">1. Select Project</label>
+      <select id="analysisProjectSelect" class="form-select">
+        <option value="">-- Choose Project --</option>
+        {% for p in projects %}
+          <option value="{{ p.id }}">{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">2. Select Document for Single Extraction</label>
+      <select id="analysisDocSelect" class="form-select">
+        <option value="">-- Select Project First --</option>
+      </select>
+    </div>
+
+    <div class="col-md-4 d-flex gap-2">
+      <button id="runDocAnalysisBtn" class="btn-kb-primary flex-fill justify-content-center">
+        <i data-lucide="zap"></i> Extract Document
+      </button>
+      <button id="runBatchAnalysisBtn" class="btn-kb-secondary flex-fill justify-content-center" title="Analyze all documents in this project at once">
+        <i data-lucide="layers"></i> Batch Analyze All
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Processing & Status Indicator -->
+<div id="analysisStatusIndicator" class="mb-4 d-none">
+  <!-- Status alerts injected via JS -->
+</div>
+
+<!-- Analysis Results Container -->
+<div id="analysisResultsContainer" class="d-none">
+  <!-- Executive Summary & Readiness Banner -->
+  <div class="card p-4 mb-4 border bg-white shadow-sm">
+    <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+      <div class="d-flex align-items-center gap-2">
+        <i data-lucide="sparkles" class="text-primary" style="width:20px;height:20px;"></i>
+        <h5 class="fw-bold text-dark mb-0">AI Handover Executive Summary</h5>
+      </div>
+      <span id="analysisReadinessBadge" class="badge badge-status badge-active">Ready</span>
+    </div>
+    <p id="analysisExecSummary" class="text-dark mb-3" style="font-size:0.95rem;line-height:1.6;">
+      <!-- Injected summary -->
+    </p>
+    <div class="p-3 rounded bg-light border">
+      <div class="fw-bold small text-muted mb-2">Key Highlighted Focus Areas:</div>
+      <ul id="analysisHighlightsList" class="mb-0 ps-3 small text-dark">
+        <!-- Highlights list -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- Separate Grid Cards for Each Category -->
+  <div class="row g-4">
+    <!-- 1. Extracted Decisions Card -->
+    <div class="col-lg-6">
+      <div class="dashboard-card h-100 mb-0">
+        <div class="dashboard-card-header">
+          <h3><i data-lucide="git-commit" class="text-primary"></i> Architectural & Strategic Decisions</h3>
+          <span class="badge bg-light text-primary border">Evidence Linked</span>
+        </div>
+        <div class="dashboard-card-body" id="analysisDecisionsContainer" style="max-height: 400px; overflow-y: auto;">
+          <!-- Decisions list -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Identified Tasks Card -->
+    <div class="col-lg-6">
+      <div class="dashboard-card h-100 mb-0">
+        <div class="dashboard-card-header">
+          <h3><i data-lucide="check-square" class="text-success"></i> Extracted Deliverables & Tasks</h3>
+          <span class="badge bg-light text-success border">Ownership Mapped</span>
+        </div>
+        <div class="dashboard-card-body" id="analysisTasksContainer" style="max-height: 400px; overflow-y: auto;">
+          <!-- Tasks list -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Operational & Technical Risks -->
+    <div class="col-lg-6">
+      <div class="dashboard-card h-100 mb-0">
+        <div class="dashboard-card-header">
+          <h3><i data-lucide="alert-triangle" class="text-danger"></i> Identified Risks & Vulnerabilities</h3>
+          <span class="badge bg-danger bg-opacity-10 text-danger border">Audited</span>
+        </div>
+        <div class="dashboard-card-body" id="analysisRisksContainer" style="max-height: 380px; overflow-y: auto;">
+          <!-- Risks list -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Dependencies & Blockers -->
+    <div class="col-lg-6">
+      <div class="dashboard-card h-100 mb-0">
+        <div class="dashboard-card-header">
+          <h3><i data-lucide="network" class="text-warning"></i> Task Dependencies & Blockers</h3>
+          <span class="badge bg-warning bg-opacity-10 text-dark border">Sequencing</span>
+        </div>
+        <div class="dashboard-card-body" id="analysisDepsContainer" style="max-height: 380px; overflow-y: auto;">
+          <!-- Dependencies list -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Missing Information & Unresolved Questions -->
+    <div class="col-12">
+      <div class="dashboard-card mb-0">
+        <div class="dashboard-card-header">
+          <h3><i data-lucide="help-circle" class="text-secondary"></i> Incomplete Information & Documentation Gaps</h3>
+          <span class="badge bg-light text-muted border">System Audit</span>
+        </div>
+        <div class="dashboard-card-body" id="analysisMissingContainer">
+          <!-- Missing info list -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
+{% endblock %}

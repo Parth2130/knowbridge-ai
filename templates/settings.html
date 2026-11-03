@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Settings & Profile — KnowBridge AI{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <h3 class="fw-bold text-dark mb-1">Account & Platform Settings</h3>
+  <p class="text-muted small mb-0">Manage your profile, team organisation, security credentials, and AI engine configuration</p>
+</div>
+
+<div class="row g-4" style="max-width: 1000px;">
+  <!-- Profile & Organisation Settings -->
+  <div class="col-md-6">
+    <div class="card p-4 border bg-white shadow-sm h-100">
+      <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+        <div class="avatar-circle" style="width:50px;height:50px;font-size:1.2rem;">
+          {{ (user.full_name[:1] if user and user.full_name else 'U') | upper }}
+        </div>
+        <div>
+          <h5 class="fw-bold text-dark mb-0">{{ user.full_name if user else 'Alex Chen' }}</h5>
+          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">{{ user.role if user else 'Project Manager' }}</span>
+        </div>
+      </div>
+
+      <form id="profileForm">
+        <div class="mb-3">
+          <label for="profileName" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="profileName" value="{{ user.full_name if user else '' }}" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="profileEmail" class="form-label">Email Address (Read-only)</label>
+          <input type="email" class="form-control bg-light" id="profileEmail" value="{{ user.email if user else '' }}" readonly>
+        </div>
+
+        <div class="mb-3">
+          <label for="profileOrg" class="form-label">Organisation / Team</label>
+          <input type="text" class="form-control" id="profileOrg" value="{{ user.organisation if user else '' }}" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="profileRole" class="form-label">Role</label>
+          <select id="profileRole" class="form-select">
+            <option value="Administrator" {% if user and user.role == 'Administrator' %}selected{% endif %}>Administrator</option>
+            <option value="Project Manager" {% if user and user.role == 'Project Manager' %}selected{% endif %}>Project Manager</option>
+            <option value="Team Member" {% if user and user.role == 'Team Member' %}selected{% endif %}>Team Member</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-kb-primary btn-sm">
+          <i data-lucide="save"></i> Save Profile Changes
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Security & Password Change -->
+  <div class="col-md-6">
+    <div class="card p-4 border bg-white shadow-sm mb-4">
+      <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+        <i data-lucide="lock" class="text-primary"></i> Change Password
+      </h5>
+
+      <form id="passwordForm">
+        <div class="mb-3">
+          <label for="currentPassword" class="form-label">Current Password</label>
+          <input type="password" class="form-control" id="currentPassword" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="newPassword" class="form-label">New Password</label>
+          <input type="password" class="form-control" id="newPassword" required minlength="6">
+        </div>
+
+        <div class="mb-3">
+          <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
+          <input type="password" class="form-control" id="confirmNewPassword" required minlength="6">
+        </div>
+
+        <button type="submit" class="btn-kb-secondary btn-sm">
+          <i data-lucide="key"></i> Update Password
+        </button>
+      </form>
+    </div>
+
+    <!-- AI Engine Configuration Status Card -->
+    <div class="card p-4 border bg-white shadow-sm">
+      <h5 class="fw-bold text-dark mb-2 d-flex align-items-center gap-2">
+        <i data-lucide="cpu" class="text-primary"></i> AI Knowledge Engine Status
+      </h5>
+      <p class="text-muted small mb-3">KnowBridge AI supports transparent local extraction or optional cloud LLM reasoning.</p>
+
+      <div class="p-3 rounded bg-light border mb-2">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="small fw-semibold text-dark">Active NLP Engine:</span>
+          <span class="badge bg-success" id="activeEngineBadge">Local High-Precision NLP</span>
+        </div>
+        <div class="small text-muted" id="activeEngineDesc">
+          Deterministic parsing active. Fully functional offline with zero paid API key dependencies.
+        </div>
+      </div>
+      <div class="text-muted" style="font-size:0.75rem;">
+        To activate cloud Gemini LLM, set environment variable <code>GEMINI_API_KEY</code> and restart the application.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Check settings
+  fetch('/api/settings').then(res => res.json()).then(data => {
+    if (data.ai_configuration) {
+      document.getElementById('activeEngineBadge').innerText = data.ai_configuration.active_engine;
+      document.getElementById('activeEngineDesc').innerText = data.ai_configuration.mode_description;
+    }
+  });
+
+  const profileForm = document.getElementById('profileForm');
+  if (profileForm) {
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const full_name = document.getElementById('profileName').value.trim();
+      const organisation = document.getElementById('profileOrg').value.trim();
+      const role = document.getElementById('profileRole').value;
+
+      try {
+        const res = await fetch('/api/settings/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ full_name, organisation, role })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Profile updated successfully!', 'success');
+          setTimeout(() => window.location.reload(), 600);
+        } else {
+          showToast(data.error || 'Failed to update profile.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error: ' + err.message, 'error');
+      }
+    });
+  }
+
+  const passwordForm = document.getElementById('passwordForm');
+  if (passwordForm) {
+    passwordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const current_password = document.getElementById('currentPassword').value;
+      const new_password = document.getElementById('newPassword').value;
+      const confirm_password = document.getElementById('confirmNewPassword').value;
+
+      try {
+        const res = await fetch('/api/settings/password', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ current_password, new_password, confirm_password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Password changed successfully!', 'success');
+          passwordForm.reset();
+        } else {
+          showToast(data.error || 'Failed to update password.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error: ' + err.message, 'error');
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

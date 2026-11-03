@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Project Timeline — KnowBridge AI{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <div>
+    <h3 class="fw-bold text-dark mb-1">Project Transition Timeline</h3>
+    <p class="text-muted small mb-0">Chronological audit log of project milestones, document uploads, and handover activities</p>
+  </div>
+  <div class="d-flex align-items-center gap-2">
+    <select id="timelineProjectFilter" class="form-select form-select-sm" style="width:240px;">
+      <option value="">All Projects</option>
+      {% for p in projects %}
+        <option value="{{ p.id }}">{{ p.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+<div class="card p-4 border bg-white shadow-sm" style="max-width: 900px; margin: 0 auto;">
+  <div id="timelineTrackContainer">
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="text-muted mt-2">Loading timeline events...</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/timeline.js') }}"></script>
+{% endblock %}

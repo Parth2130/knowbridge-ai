@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Decisions — KnowBridge AI{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <div>
+    <h3 class="fw-bold text-dark mb-1">Architectural Decision Records (ADRs)</h3>
+    <p class="text-muted small mb-0">Track system choices, technology adoptions, and design rationale backed by source citations</p>
+  </div>
+  <button class="btn-kb-primary" data-bs-toggle="modal" data-bs-target="#decisionModal" onclick="resetDecisionForm()">
+    <i data-lucide="plus"></i> Record New Decision
+  </button>
+</div>
+
+<!-- Filters -->
+<div class="card p-3 mb-4 border bg-white shadow-sm">
+  <div class="row g-2 align-items-center">
+    <div class="col-md-5">
+      <div class="input-group">
+        <span class="input-group-text bg-light border-end-0"><i data-lucide="search" style="width:16px;color:#718096;"></i></span>
+        <input type="text" id="decisionSearchInput" class="form-control border-start-0" placeholder="Search decisions by title, reason, or tech...">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <select id="decisionProjectFilter" class="form-select">
+        <option value="">All Projects</option>
+        {% for p in projects %}
+          <option value="{{ p.id }}">{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select id="decisionStatusFilter" class="form-select">
+        <option value="All">All Statuses</option>
+        <option value="Approved">Approved</option>
+        <option value="Under Review">Under Review</option>
+        <option value="Deprecated">Deprecated</option>
+      </select>
+    </div>
+    <div class="col-md-1 text-end">
+      <button class="btn btn-outline-secondary w-100" onclick="loadDecisions()" title="Refresh">
+        <i data-lucide="rotate-cw" style="width:16px;"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Chronological Decision Timeline -->
+<div class="card p-4 border bg-white shadow-sm" style="max-width: 950px; margin: 0 auto;">
+  <div id="decisionsTimelineContainer">
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="text-muted mt-2">Loading decision timeline...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Decision Modal -->
+<div class="modal fade" id="decisionModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-light">
+        <h5 class="modal-title fw-bold text-dark" id="decisionModalTitle">Record New Decision</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="decisionForm">
+        <div class="modal-body p-4">
+          <input type="hidden" id="decisionId">
+
+          <div class="mb-3">
+            <label for="decisionProject" class="form-label">Project *</label>
+            <select id="decisionProject" class="form-select" required>
+              <option value="">-- Select Project --</option>
+              {% for p in projects %}
+                <option value="{{ p.id }}">{{ p.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="decisionTitle" class="form-label">Decision Title *</label>
+            <input type="text" class="form-control" id="decisionTitle" placeholder="e.g. Adopted Kafka instead of RabbitMQ for event streaming" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="decisionDescription" class="form-label">Full Description & Context *</label>
+            <textarea class="form-control" id="decisionDescription" rows="3" placeholder="Describe the problem context and alternative options considered..." required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="decisionReason" class="form-label">Rationale / Key Motivation</label>
+            <textarea class="form-control" id="decisionReason" rows="2" placeholder="Why this option was chosen (performance, cost, team familiarity, etc.)..."></textarea>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="decisionDate" class="form-label">Decision Date</label>
+              <input type="date" class="form-control" id="decisionDate">
+            </div>
+            <div class="col-md-6">
+              <label for="decisionStatus" class="form-label">Status</label>
+              <select id="decisionStatus" class="form-select">
+                <option value="Approved">Approved</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Deprecated">Deprecated</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer bg-light py-2">
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn-kb-primary btn-sm">Save Decision</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/decisions.js') }}"></script>
+{% endblock %}
