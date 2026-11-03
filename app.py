@@ -65,6 +65,14 @@ def create_app(config_class=Config):
     with app.app_context():
         import models.models
         db.create_all()
+        # Auto-seed on first deployment if database is empty
+        try:
+            from models.models import User
+            if not User.query.first():
+                from seed_demo import seed
+                seed(drop=False, target_app=app)
+        except Exception as e:
+            app.logger.warning(f"Auto-seed exception: {e}")
 
     return app
 

@@ -101,12 +101,15 @@ Key Discussion Points:
         ("demo_transition_meeting_notes.txt", txt_path, "txt", 1)
     ]
 
-def seed():
-    app = create_app()
-    with app.app_context():
-        print("[1/5] Dropping and re-creating clean database tables...")
-        db.drop_all()
-        db.create_all()
+def seed(drop=True, target_app=None):
+    def _execute():
+        if drop:
+            print("[1/5] Dropping and re-creating clean database tables...")
+            db.drop_all()
+            db.create_all()
+        else:
+            print("[1/5] Initializing tables...")
+            db.create_all()
 
         print("[2/5] Creating demo user accounts...")
         demo_user = User(
@@ -454,6 +457,14 @@ def seed():
         print("    Email: sarah.jenkins@knowbridge.ai                ")
         print("    Password: admin123                                ")
         print("=======================================================")
+
+    if target_app:
+        with target_app.app_context():
+            _execute()
+    else:
+        app = create_app()
+        with app.app_context():
+            _execute()
 
 if __name__ == '__main__':
     seed()
